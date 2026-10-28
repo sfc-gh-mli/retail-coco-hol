@@ -40,3 +40,32 @@ def render_prompt(prompt_id: str, title: str, prompt_text: str):
             )
         st.caption("Copy this prompt and paste it into Cortex Code")
         st.code(prompt_text, language="text", wrap_lines=True)
+
+def render_explanation(title: str, body: str):
+    with st.expander(f":material/school: {title}", expanded=False):
+        st.markdown(body)
+
+def render_technology_card(name: str, description: str, icon: str = "widgets"):
+    with st.container(border=True):
+        st.markdown(f":material/{icon}: **{name}**")
+        st.caption(description)
+
+def render_technologies_used(technologies: list[dict]):
+    st.markdown("##### :material/build: Technologies used in this session")
+    cols = st.columns(min(len(technologies), 3))
+    for i, tech in enumerate(technologies):
+        with cols[i % len(cols)]:
+            render_technology_card(
+                tech["name"], tech["description"], tech.get("icon", "widgets")
+            )
+
+def render_key_concepts(concepts: list[dict]):
+    st.markdown("##### :material/lightbulb: Key concepts")
+    for concept in concepts:
+        with st.expander(f"**{concept['term']}**"):
+            st.markdown(concept["definition"])
+
+def render_what_you_built(items: list[str]):
+    st.markdown("##### :material/check_circle: What you built in this session")
+    for item in items:
+        st.markdown(f"- :green-badge[Done] {item}")

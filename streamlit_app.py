@@ -1,5 +1,6 @@
 """Public workshop guide. Reads only files in this repo; no Snowflake connection or secrets."""
 import json
+import re
 import sys
 from functools import partial
 from pathlib import Path
@@ -54,13 +55,31 @@ def admin():
 
 def exercise(step):
     st.title(step["title"])
-    st.caption(f"{step['minutes']} minutes · {step['mode']}")
-    st.markdown("\n".join(line for line in step["body"].splitlines()
-                          if not line.startswith("> ") and line.strip().lower() not in {"prompt:", "prompts:"}))
+    st.caption(f":material/schedule: {step['minutes']} minutes · {step['mode']}")
+    components.render_technologies_used(step["technologies"])
+    st.space("small")
+    st.markdown("#### The situation")
+    with st.container(border=True):
+        st.markdown(step["situation"])
+    st.space("small")
     prompts = step["prompts"]
     for number, prompt in enumerate(prompts, 1):
         title = "Try this prompt" if len(prompts) == 1 else f"Prompt {number} of {len(prompts)}"
         components.render_prompt(prompt["id"], title, prompt["text"])
+    details = "\n".join(line for line in step["body"].splitlines()
+                        if not line.startswith("> ") and not re.match(r"(?i)^prompts?\b.*:\s*$", line.strip()))
+    if details.strip():
+        components.render_explanation("What to expect and how to check it", details)
+    for tip in step["tips"]:
+        if tip["kind"] == "warning":
+            st.warning(tip["text"], icon=":material/warning:")
+        else:
+            st.info(tip["text"], icon=":material/lightbulb:")
+    st.space("small")
+    components.render_key_concepts(step["concepts"])
+    if step["built"]:
+        st.space("small")
+        components.render_what_you_built(step["built"])
 
 
 pages = {"Start here": [st.Page(overview, title="Overview", icon=":material/home:"),
