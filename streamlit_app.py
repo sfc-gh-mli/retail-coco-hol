@@ -13,6 +13,8 @@ import components  # noqa: E402
 
 LAB = json.loads((ROOT / "app/lab.json").read_text())
 CURRICULUM = json.loads((ROOT / "app/curriculum.json").read_text())
+STARTERS_FILE = ROOT / "app/starters.json"
+STARTERS = json.loads(STARTERS_FILE.read_text()) if STARTERS_FILE.is_file() else {}
 st.set_page_config(page_title=LAB["title"], layout="wide")
 components.SESSION_PROMPTS = {
     index: [prompt["id"] for prompt in step["prompts"]] for index, step in enumerate(CURRICULUM, 1)
@@ -62,6 +64,16 @@ def exercise(step):
     with st.container(border=True):
         st.markdown(step["situation"])
     st.space("small")
+    starters = STARTERS.get(step["id"], [])
+    if starters:
+        st.markdown("#### Starter files")
+        st.caption("Copy or download each file and save it at the path shown, relative to your project folder.")
+        for index, starter in enumerate(starters):
+            with st.expander(f"{starter['label']} · `{starter['path']}`", icon=":material/description:"):
+                st.code(starter["content"], language=starter["language"])
+                st.download_button("Download", starter["content"], file_name=starter["path"].rsplit("/", 1)[-1],
+                                   icon=":material/download:", key=f"dl-{step['id']}-{index}")
+        st.space("small")
     prompts = step["prompts"]
     for number, prompt in enumerate(prompts, 1):
         title = "Try this prompt" if len(prompts) == 1 else f"Prompt {number} of {len(prompts)}"

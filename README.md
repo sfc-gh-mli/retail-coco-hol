@@ -19,8 +19,8 @@ Explore simulated customer purchases and turn team conventions into a repeatable
 ## For participants
 Open the lab guide app, start at **Overview**, and follow the pages in order. Use only your assigned schema and role.
 
-## Exercise files
-`exercises/` contains the starter files referenced in the lab (project conventions and the custom skill you will adapt).
+## Starter files
+Each lab step that needs a file shows it in the app with a copy button and a download, plus the path to save it to.
 
 ## Attribution
 Built from [coco-hol-template](https://github.com/sfc-gh-obenning/coco-hol-template) with the customer-coco-hol skill.

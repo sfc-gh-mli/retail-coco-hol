@@ -9,5 +9,5 @@
   "warehouse": "HOL_EXAMPLE_WH",
   "zip": "retail-coco-hol-data.zip",
   "expected_text": "LOCATIONS 5 rows, CUSTOMERS 100 rows, TRANSACTIONS 1200 rows; NET_SPEND 323293.04.",
-  "interface_notes": "- Open a Workspace, then Cortex Code in the lower-right corner. Use Plan mode before multi-step work.\n- Personal skills live in `.snowflake/cortex/skills/<name>/SKILL.md` in that workspace (+ Create Skill, or upload the skill folder from this repo's `exercises/`).\n- Plugins, local hooks and custom subagent files are shown by the facilitator from Desktop/CLI."
+  "interface_notes": "- Open a Workspace, then Cortex Code in the lower-right corner. Use Plan mode before multi-step work.\n- Personal skills live in `.snowflake/cortex/skills/<name>/SKILL.md` in that workspace (+ Create Skill, then paste the starter from the lab step page).\n- Plugins, local hooks and custom subagent files are shown by the facilitator from Desktop/CLI."
 }

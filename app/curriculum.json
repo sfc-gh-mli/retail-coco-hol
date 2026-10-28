@@ -58,7 +58,7 @@
     "minutes": 7,
     "title": "AGENTS.md context",
     "mode": "hands-on",
-    "body": "Provide `assets/exercises/AGENTS.md` as a starter. Prompt:\n> Read AGENTS.md. Summarize the naming, parameterization, validation, and sandbox rules you will follow. Add our agreed business definition of net spend to this project context. Show the diff before accepting it.\n\nExpected: small meaningful context file with exact business definitions and safe scope. Check: agent can explain conventions before writing code. In Snowsight, explicitly attach the context file if automatic recognition was not verified. Recovery: attach the starter as direct context.",
+    "body": "Participants save the AGENTS.md starter from the step page. Prompt:\n> Read AGENTS.md. Summarize the naming, parameterization, validation, and sandbox rules you will follow. Add our agreed business definition of net spend to this project context. Show the diff before accepting it.\n\nExpected: small meaningful context file with exact business definitions and safe scope. Check: agent can explain conventions before writing code. In Snowsight, explicitly attach the context file if automatic recognition was not verified. Recovery: attach the starter as direct context.",
     "technologies": [
       {
         "name": "AGENTS.md",
@@ -157,7 +157,7 @@
     "minutes": 10,
     "title": "Review and fix a transformation",
     "mode": "hands-on",
-    "body": "Seed flawed code only in a clearly marked exercise file: SELECT *, inconsistent alias, hard-coded business cutoff, unused columns. It must still reference only synthetic SOURCE tables. Do not seed production writes or intentional expensive Cartesian joins.\n\nPrompt 1:\n> Use hol-deployment-review on exercises/transform_before.sql. Read all three resources. Report evidence-backed findings without running or changing anything. Distinguish correctness issues from performance hypotheses that require a query profile.\n\nPrompt 2 (after review):\n> Fix the agreed findings in a new transformation file. Parameterize the cutoff, select explicit columns, use the agreed net-spend definition, and target only HOL_EXAMPLE_20261026.P001. Preview the SQL and validate before running on the small sandbox data. Compare row counts and totals to expected-results.json.\n\nExpected: reviewed transformation with a reproducible cutoff and matching totals. Check: output grain, counts, totals, no unintended fan-out; compile and small execution in approved sandbox. Recovery: supplied corrected SQL and known-answer totals, labeled as a checkpoint.",
+    "body": "Seed flawed code only in a clearly marked exercise file: SELECT *, inconsistent alias, hard-coded business cutoff, unused columns. It must still reference only synthetic SOURCE tables. Do not seed production writes or intentional expensive Cartesian joins.\n\nPrompt 1:\n> Use hol-deployment-review on transform_before.sql. Read all three resources. Report evidence-backed findings without running or changing anything. Distinguish correctness issues from performance hypotheses that require a query profile.\n\nPrompt 2 (after review):\n> Fix the agreed findings in a new transformation file. Parameterize the cutoff, select explicit columns, use the agreed net-spend definition, and target only HOL_EXAMPLE_20261026.P001. Preview the SQL and validate before running on the small sandbox data. Compare row counts and totals to expected-results.json.\n\nExpected: reviewed transformation with a reproducible cutoff and matching totals. Check: output grain, counts, totals, no unintended fan-out; compile and small execution in approved sandbox. Recovery: supplied corrected SQL and known-answer totals, labeled as a checkpoint.",
     "technologies": [
       {
         "name": "hol-deployment-review",
@@ -197,7 +197,7 @@
     "prompts": [
       {
         "id": "de-04-p1",
-        "text": "Use hol-deployment-review on exercises/transform_before.sql. Read all three resources. Report evidence-backed findings without running or changing anything. Distinguish correctness issues from performance hypotheses that require a query profile."
+        "text": "Use hol-deployment-review on transform_before.sql. Read all three resources. Report evidence-backed findings without running or changing anything. Distinguish correctness issues from performance hypotheses that require a query profile."
       },
       {
         "id": "de-04-p2",
