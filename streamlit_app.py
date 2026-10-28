@@ -55,9 +55,12 @@ def admin():
 def exercise(step):
     st.title(step["title"])
     st.caption(f"{step['minutes']} minutes · {step['mode']}")
-    st.markdown("\n".join(line for line in step["body"].splitlines() if not line.startswith("> ")))
-    for prompt in step["prompts"]:
-        components.render_prompt(prompt["id"], "Copyable prompt", prompt["text"])
+    st.markdown("\n".join(line for line in step["body"].splitlines()
+                          if not line.startswith("> ") and line.strip().lower() not in {"prompt:", "prompts:"}))
+    prompts = step["prompts"]
+    for number, prompt in enumerate(prompts, 1):
+        title = "Try this prompt" if len(prompts) == 1 else f"Prompt {number} of {len(prompts)}"
+        components.render_prompt(prompt["id"], title, prompt["text"])
 
 
 pages = {"Start here": [st.Page(overview, title="Overview", icon=":material/home:"),

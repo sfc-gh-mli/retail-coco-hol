@@ -30,7 +30,7 @@ def render_prompt(prompt_id: str, title: str, prompt_text: str):
     with st.container(border=True):
         header_col, check_col = st.columns([5, 1])
         with header_col:
-            st.markdown(f"#### :material/terminal: {prompt_id} - {title}")
+            st.markdown(f"##### :material/terminal: {title}")
         with check_col:
             st.checkbox(
                 "Done",
