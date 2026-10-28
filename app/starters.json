@@ -1,38 +1,4 @@
 {
-  "de-02": [
-    {
-      "label": "Project context",
-      "path": "AGENTS.md",
-      "language": "markdown",
-      "content": "# HOL project conventions\n\nUse Plan before multi-step changes. Read the generated lab-config.json for the approved database, schema, role and warehouse. Never infer that an existing connection is the intended account.\n\n- Only synthetic SOURCE tables may be read; only the participant's allocated schema may be written.\n- Use uppercase descriptive Snowflake identifiers and explicit column lists.\n- Parameterize business cutoffs; use bound values or validated identifiers, never raw user text in SQL.\n- Net spend in this simulated lab means SUM(AMOUNT) for COMPLETED transactions; canceled/refunded rows contribute zero.\n- Preview edits/SQL and validate results against expected-results.json.\n- Report evidence, not guessed performance improvements. No production access or permission changes.\n- Keep secrets and private participant rosters out of source and reports.\n- Publishing, email, schedules and cleanup require separate approval.\n"
-    }
-  ],
-  "de-03": [
-    {
-      "label": "Skill starter",
-      "path": ".snowflake/cortex/skills/hol-deployment-review/SKILL.md",
-      "language": "markdown",
-      "content": "---\nname: hol-deployment-review\ndescription: \"Review HOL SQL before deployment for team naming, efficiency and parameterization conventions. Use for pre-deployment review, review this transformation, and readiness checks. Does not deploy.\"\n---\n# Deployment review\n\n1. Read the target code and project AGENTS.md. Do not execute or edit.\n2. Load [naming](resources/naming.md), [performance](resources/performance.md), and [parameterization](resources/parameterization.md).\n3. Confirm exact sandbox scope, output grain, business definitions and tests.\n4. Report each finding: severity, file:line, evidence, violated rule, proposed fix, and validation needed.\n5. Separate verified correctness issues from performance hypotheses. If no findings, say so and list test gaps.\n6. Stop for approval before any edits. Deployment is a separate action.\n"
-    },
-    {
-      "label": "Naming rules",
-      "path": ".snowflake/cortex/skills/hol-deployment-review/resources/naming.md",
-      "language": "markdown",
-      "content": "# Naming requirements\nUse uppercase descriptive object/column aliases. Fully qualify persisted objects with the approved HOL database and participant schema. Name the output by its grain (for example CUSTOMER_SPEND), not temp1. Do not rename unrelated objects.\n"
-    },
-    {
-      "label": "Performance rules",
-      "path": ".snowflake/cortex/skills/hol-deployment-review/resources/performance.md",
-      "language": "markdown",
-      "content": "# Performance requirements\nSelect only needed columns. Apply explicit reporting windows. Verify join cardinality before aggregation and avoid duplicate fact rows. Compare results before/after. A style change is not proof of faster execution: require measured query profile evidence before claiming optimization. No expensive benchmarks in the live lab.\n"
-    },
-    {
-      "label": "Parameterization rules",
-      "path": ".snowflake/cortex/skills/hol-deployment-review/resources/parameterization.md",
-      "language": "markdown",
-      "content": "# Parameterization requirements\nRead target identifiers from validated configuration. Business dates must be explicit parameters, not hidden literals or CURRENT_DATE when reproducibility matters. Use bound values and validated identifiers. Never interpolate display names or untrusted text into SQL. Credentials belong in approved secret management, never code or reports.\n"
-    }
-  ],
   "de-04": [
     {
       "label": "SQL to review",
@@ -53,14 +19,6 @@
       "path": "guard_demo.py",
       "language": "python",
       "content": "\"\"\"Fixture-only PreToolUse demonstration. NOT a SQL parser/security boundary.\"\"\"\nimport json\nimport re\nimport sys\n\n\ndef decision(payload):\n    if not isinstance(payload, dict) or payload.get(\"hook_event_name\") != \"PreToolUse\":\n        return False, \"Malformed or unsupported demonstration payload\"\n    tool_input = payload.get(\"tool_input\")\n    if not isinstance(tool_input, dict):\n        return False, \"Missing tool_input\"\n    sql = tool_input.get(\"sql\")\n    if payload.get(\"tool_name\") not in {\"sql_execute\", \"snowflake_sql_execute\"} or not isinstance(sql, str) or not sql.strip():\n        return False, \"This fixture only demonstrates SQL tool inputs\"\n    if re.search(r\"\\bPROD_SIM\\b\", sql, re.IGNORECASE):\n        return False, \"Demonstration denied: sandbox PROD_SIM marker\"\n    return True, \"No demonstration marker found; RBAC still governs actual execution\"\n\n\ndef main():\n    try:\n        payload = json.load(sys.stdin)\n    except (ValueError, TypeError):\n        payload = None\n    allowed, reason = decision(payload)\n    print(json.dumps({\"decision\": \"allow\" if allowed else \"block\", \"reason\": reason}))\n    return 0 if allowed else 2\n\n\nif __name__ == \"__main__\":\n    raise SystemExit(main())\n"
-    }
-  ],
-  "de-06": [
-    {
-      "label": "Subagent starter (facilitator)",
-      "path": "hol-reviewer.md",
-      "language": "markdown",
-      "content": "---\nname: hol-reviewer\ndescription: \"Read-only review of HOL SQL using the team's naming, performance and parameterization resources.\"\ntools:\n  - read\n  - grep\n  - glob\n---\n# Read-only HOL reviewer\nResolve these lowercase tool IDs against the active runtime before use. Do not silently broaden the allowlist if any are unavailable.\n\nRead the assigned code, AGENTS.md and all hol-deployment-review resources. Review only the specified files. Do not execute SQL/shell, edit files, change grants, publish, or delegate further. Return severity, file:line, evidence, violated rule, suggested fix and remaining test gaps. Separate facts from hypotheses. If a file is missing, report the missing input rather than guess its contents.\n"
     }
   ]
 }

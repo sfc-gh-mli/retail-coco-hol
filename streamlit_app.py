@@ -79,7 +79,7 @@ def exercise(step):
         title = "Try this prompt" if len(prompts) == 1 else f"Prompt {number} of {len(prompts)}"
         components.render_prompt(prompt["id"], title, prompt["text"])
     details = "\n".join(line for line in step["body"].splitlines()
-                        if not line.startswith("> ") and not re.match(r"(?i)^prompts?\b.*:\s*$", line.strip()))
+                        if not line.startswith(">") and not re.match(r"(?i)^prompts?\b.*:\s*$", line.strip()))
     if details.strip():
         components.render_explanation("What to expect and how to check it", details)
     for tip in step["tips"]:
