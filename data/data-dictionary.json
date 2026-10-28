@@ -1,0 +1,29 @@
+{
+  "synthetic": true,
+  "industry": "retail",
+  "categories": [
+    "Essentials",
+    "Apparel",
+    "Electronics"
+  ],
+  "net_spend": "SUM(AMOUNT) for STATUS = COMPLETED; canceled/refunded rows contribute zero.",
+  "tables": {
+    "LOCATIONS": {
+      "grain": "one row per synthetic location",
+      "key": "LOCATION_ID"
+    },
+    "CUSTOMERS": {
+      "grain": "one row per synthetic customer",
+      "key": "CUSTOMER_ID",
+      "foreign_key": "LOCATION_ID -> LOCATIONS.LOCATION_ID"
+    },
+    "TRANSACTIONS": {
+      "grain": "one row per transaction",
+      "key": "TRANSACTION_ID",
+      "foreign_key": "CUSTOMER_ID -> CUSTOMERS.CUSTOMER_ID",
+      "timestamp": "TRANSACTION_TIME, naive UTC-like simulation",
+      "amount": "fixed-point decimal, 2 places; not real customer currency data"
+    }
+  },
+  "warning": "Starter data, not a fitted model, deployed monitor, or customer accounting definition."
+}

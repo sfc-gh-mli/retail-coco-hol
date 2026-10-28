@@ -1,0 +1,92 @@
+[
+  {
+    "id": "de-01",
+    "minutes": 8,
+    "title": "Introduction, sandbox readiness, Plan",
+    "mode": "guided",
+    "body": "Prompt:\n> Plan only. We are preparing a customer-spend transformation using synthetic data in HOL_EXAMPLE_20261026.SOURCE. My writable schema is HOL_EXAMPLE_20261026.P001 and warehouse is HOL_EXAMPLE_WH. Explain your steps, expected outputs, checks, and cost controls. Do not execute SQL or change permissions. Never use production objects.\n\nExpected: a scoped plan naming the exact source and output objects, not a generic pipeline. Check: admin readiness was successful and planned writes stay in the participant schema. Recovery: use the prepared plan and context query; do not repair account setup live.",
+    "prompts": [
+      {
+        "id": "de-01-p1",
+        "text": "Plan only. We are preparing a customer-spend transformation using synthetic data in HOL_EXAMPLE_20261026.SOURCE. My writable schema is HOL_EXAMPLE_20261026.P001 and warehouse is HOL_EXAMPLE_WH. Explain your steps, expected outputs, checks, and cost controls. Do not execute SQL or change permissions. Never use production objects."
+      }
+    ]
+  },
+  {
+    "id": "de-02",
+    "minutes": 7,
+    "title": "AGENTS.md context",
+    "mode": "hands-on",
+    "body": "Provide `assets/exercises/AGENTS.md` as a starter. Prompt:\n> Read AGENTS.md. Summarize the naming, parameterization, validation, and sandbox rules you will follow. Add our agreed business definition of net spend to this project context. Show the diff before accepting it.\n\nExpected: small meaningful context file with exact business definitions and safe scope. Check: agent can explain conventions before writing code. In Snowsight, explicitly attach the context file if automatic recognition was not verified. Recovery: attach the starter as direct context.",
+    "prompts": [
+      {
+        "id": "de-02-p1",
+        "text": "Read AGENTS.md. Summarize the naming, parameterization, validation, and sandbox rules you will follow. Add our agreed business definition of net spend to this project context. Show the diff before accepting it."
+      }
+    ]
+  },
+  {
+    "id": "de-03",
+    "minutes": 15,
+    "title": "Custom deployment-review skill and resources",
+    "mode": "hands-on",
+    "body": "Explain a skill as a reusable instruction directory: SKILL.md frontmatter triggers + workflow, optional resources/scripts/assets. Use bundled skills for product APIs and platform semantics; use custom skills for the team's requirements. A skill is not a trained model or an RBAC control.\n\nPrompt:\n> Create a skill named hol-deployment-review using the supplied starter. Its job is a read-only review, not deployment. Keep naming conventions, performance requirements, and parameterization rules in separate resources/ files and load them explicitly. Require findings with severity, file:line, evidence, and a proposed fix. Stop before edits or deployment. Preserve existing files and resolve the proper skill directory for this interface.\n\nExpected: `SKILL.md` plus `resources/naming.md`, `performance.md`, and `parameterization.md`. Check: invoke the skill on the starter SQL and verify each resource was considered. Recovery: use the supplied completed starter and modify one rule instead of creating from scratch.",
+    "prompts": [
+      {
+        "id": "de-03-p1",
+        "text": "Create a skill named hol-deployment-review using the supplied starter. Its job is a read-only review, not deployment. Keep naming conventions, performance requirements, and parameterization rules in separate resources/ files and load them explicitly. Require findings with severity, file:line, evidence, and a proposed fix. Stop before edits or deployment. Preserve existing files and resolve the proper skill directory for this interface."
+      }
+    ]
+  },
+  {
+    "id": "de-04",
+    "minutes": 10,
+    "title": "Review and fix a transformation",
+    "mode": "hands-on",
+    "body": "Seed flawed code only in a clearly marked exercise file: SELECT *, inconsistent alias, hard-coded business cutoff, unused columns. It must still reference only synthetic SOURCE tables. Do not seed production writes or intentional expensive Cartesian joins.\n\nPrompt 1:\n> Use hol-deployment-review on exercises/transform_before.sql. Read all three resources. Report evidence-backed findings without running or changing anything. Distinguish correctness issues from performance hypotheses that require a query profile.\n\nPrompt 2 (after review):\n> Fix the agreed findings in a new transformation file. Parameterize the cutoff, select explicit columns, use the agreed net-spend definition, and target only HOL_EXAMPLE_20261026.P001. Preview the SQL and validate before running on the small sandbox data. Compare row counts and totals to expected-results.json.\n\nExpected: reviewed transformation with a reproducible cutoff and matching totals. Check: output grain, counts, totals, no unintended fan-out; compile and small execution in approved sandbox. Recovery: supplied corrected SQL and known-answer totals, labeled as a checkpoint.",
+    "prompts": [
+      {
+        "id": "de-04-p1",
+        "text": "Use hol-deployment-review on exercises/transform_before.sql. Read all three resources. Report evidence-backed findings without running or changing anything. Distinguish correctness issues from performance hypotheses that require a query profile."
+      },
+      {
+        "id": "de-04-p2",
+        "text": "Fix the agreed findings in a new transformation file. Parameterize the cutoff, select explicit columns, use the agreed net-spend definition, and target only HOL_EXAMPLE_20261026.P001. Preview the SQL and validate before running on the small sandbox data. Compare row counts and totals to expected-results.json."
+      }
+    ]
+  },
+  {
+    "id": "de-05",
+    "minutes": 8,
+    "title": "Plugin and lifecycle-hook demonstration",
+    "mode": "demo",
+    "body": "Explain packaging: plugin manifest + skills/resources + agent definitions + hooks travel together, unlike an unversioned collection of loose files. Use current plugin documentation and inspected DE guide, not guessed manifests.\n\nPrompt:\n> Package our deployment-review skill and read-only reviewer into a local demonstration plugin. Show its file tree and explain discovery for this installed version. Do not publish or install globally. Add a PreToolUse demonstration hook using the supplied fixture-only guard; run its local allow/deny/malformed tests. Explain that SQL RBAC, not this string guard, protects production.\n\nExpected: reviewed local package and visible blocked fixture. The supplied guard is deliberately narrow and not a SQL parser; it must not be represented as comprehensive protection. Never test by executing an actual production write. Snowsight participants watch facilitator Desktop/CLI; do not instruct them to install a plugin in Snowsight chat. Recovery: inspect the package and fixture results captured during rehearsal, clearly labeled recorded.",
+    "prompts": [
+      {
+        "id": "de-05-p1",
+        "text": "Package our deployment-review skill and read-only reviewer into a local demonstration plugin. Show its file tree and explain discovery for this installed version. Do not publish or install globally. Add a PreToolUse demonstration hook using the supplied fixture-only guard; run its local allow/deny/malformed tests. Explain that SQL RBAC, not this string guard, protects production."
+      }
+    ]
+  },
+  {
+    "id": "de-06",
+    "minutes": 7,
+    "title": "Autonomous read-only reviewer subagent",
+    "mode": "demo",
+    "body": "Explain difference: a skill supplies instructions to the current conversation; a subagent has a focused separate context and task; a Cortex Agent is a different Snowflake product.\n\nPrompt:\n> Define a read-only subagent hol-reviewer from the supplied starter. Resolve actual tool IDs for this runtime and give only file-reading/search tools. Ask it to review the corrected transformation using our skill resources and return structured findings. It may not modify files, execute SQL, or spawn other agents.\n\nExpected: bounded repeatable review and concise report. Check: tool allowlist resolves and contains no execution/write capability; agent reports only inspected evidence. Recovery: main agent performs the same read-only review if custom subagent support is unavailable; label the substitution.",
+    "prompts": [
+      {
+        "id": "de-06-p1",
+        "text": "Define a read-only subagent hol-reviewer from the supplied starter. Resolve actual tool IDs for this runtime and give only file-reading/search tools. Ask it to review the corrected transformation using our skill resources and return structured findings. It may not modify files, execute SQL, or spawn other agents."
+      }
+    ]
+  },
+  {
+    "id": "de-07",
+    "minutes": 5,
+    "title": "Recap, questions, next steps",
+    "mode": "discussion",
+    "body": "Ask participants to identify one team convention worth encoding. Recap Plan, context, skills, plugin packaging, hooks, and subagents. Link optional CI/CD and deeper dbt validation, outside the hour. If dbt code is used, route through the available dbt verification workflow rather than treating successful compilation as correctness.",
+    "prompts": []
+  }
+]
